@@ -1,0 +1,24 @@
+{% load static %}
+
+{% if priority == 'L' %}
+
+{% if full == True %}
+Priority: Low
+{% endif %}
+<span class="low_priority" title="Low"></span>
+
+{% elif priority == 'N' %}
+
+{% if full == True %}
+Priority: Normal
+{% endif %}
+<span class="normal_priority" title="Normal"></span>
+
+{% elif priority == 'H' %}
+
+{% if full == True %}
+Priority: High
+{% endif %}
+<span class="high_priority" title="High"></span>
+
+{% endif %}

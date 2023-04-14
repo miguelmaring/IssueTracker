@@ -1,0 +1,11 @@
+/pyvenv.cfg
+src/pyvenv.cfg
+/src/.venv/
+/src/.env
+/Include/
+/Lib/
+/Scripts/
+src/Include/
+src/Lib/
+src/Scripts/
+/.vs/

@@ -1,0 +1,27 @@
+{% load static %}
+
+
+
+{% if type == 'B' %}
+
+{% if full == True %}
+Type: Bug
+{% endif %}
+<img src="{% static '/images/bug.png' %}" title="Bug" width="24" height="24" alt="Bug">
+
+{% elif type == 'Q' %}
+
+{% if full == True %}
+Type: Question
+{% endif %}
+<img src="{% static '/images/question.png' %}" title="Question" width="24" height="24" alt="Question">
+
+{% elif type == 'E' %}
+
+{% if full == True %}
+Type: Enhancement
+{% endif %}
+<img src="{% static '/images/light-bulb.png' %}" title="Enhancement" width="24" height="24"
+    alt="Enhancement">
+    
+{% endif %}

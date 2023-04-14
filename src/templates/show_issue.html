@@ -1,0 +1,444 @@
+{% extends 'base.html' %} {% block content %}
+{% load widget_tweaks %}
+{% load static %}
+<style type="text/css">
+  .issue-title {
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+
+  .title-spacer {
+    margin: 0px;
+  }
+
+  .column {
+    float: left;
+    padding-left: 20px;
+    padding-top: 20px;
+  }
+
+  .info-column {
+    width: 25%;
+    background-color: #c7c8c9;
+    max-height: 100%;
+    height: auto;
+  }
+
+  .content-column {
+    width: 75%;
+    height: auto;
+  }
+
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .content-column hr {
+    margin-left: -20px;
+  }
+
+  .showContent {
+    margin-right: 100px;
+  }
+
+  .spaceComment {
+    margin-left: 20px;
+    margin-right: 100px;
+  }
+
+  textarea {
+    max-width: 800px;
+    width: auto;
+    height: 100px;
+  }
+
+  p {
+    display: grid;
+  }
+
+  .btn {
+    background-color: #83edde;
+    color: black;
+  }
+
+  input[type=file] {
+    display: none;
+    position: fixed;
+  }
+
+  .file_btn {
+    height: 32px;
+    text-align: center;
+    vertical-align: auto;
+    padding: 3px;
+    margin: 3px;
+  }
+
+  .upload-btn {
+    font-size: 24px;
+    padding: 0;
+    margin: 0px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .delete-btn {
+    background-color: red;
+  }
+
+  .btn:hover {
+    background-color: #008aa8;
+  }
+
+  .whishlist {
+    height: 16px;
+    width: 16px;
+    background-color: #70728f;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .minor {
+    height: 16px;
+    width: 16px;
+    background-color: #40a8e4;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .normal {
+    height: 16px;
+    width: 16px;
+    background-color: #40e47c;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .important {
+    height: 16px;
+    width: 16px;
+    background-color: #e4a240;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .critical {
+    height: 16px;
+    width: 16px;
+    background-color: #e44057;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .low_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #0f0;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .normal_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #fe9e04;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .high_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #f00;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+</style>
+<div class="details">
+
+  <div class="issue-title">
+
+    <h3>
+      <span style="color: cornflowerblue">#{{issue.id}} </span>{{issue.subject}}
+      {% if issue.blocked %}
+      🔒
+      {% endif%}
+    </h3>
+
+
+    <h6>ISSUE</h6>
+
+  </div>
+
+  <hr size="8px" color="black" class="title-spacer" />
+
+  <div>
+    <div class="content-column column">
+
+      <p class="showContent">{{issue.content}}</p>
+
+      <hr />
+
+      <div class="attachments">
+        <form method="post" enctype="multipart/form-data" action="{% url
+          'add_file' issue.pk %}">{% csrf_token %}
+          {% csrf_token %}
+          <div class="file_form">
+            <label class="btn file-btn upload-btn" style="display: flex;
+              justify-content: space-around;">
+              +
+              {{file_form.file}}
+            </label>
+
+            {% for error in file_form.file.errors %}
+            <p class="error_text">{{error}}</p>
+            {% endfor %}
+          </div>
+        </form>
+
+        <h5>Attachments:</h5>
+        {% if not files %} No Attachments Yet...
+        {% else %}
+        <ul>
+          {% for file in files %}
+          <li>
+            <div>
+              <a href="{% url 'open_file' id=issue.id file_id=file.pk %}">{{file.filename}}</a>
+              <a href="{% url 'download_file' issue.id file.pk %}"><button
+                  type="button"
+                  class="download-btn file-btn btn">Download</button></a>
+              <a href="{% url 'delete_file' issue.id file.pk %}"><button
+                  type="button"
+                  class="delete-btn file-btn btn">Delete</button></a>
+            </div>
+
+          </li>
+
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+
+      <hr />
+
+      <div class="spaceComment">
+        <h5>Add a Comment</h5>
+        <form method="post" class="formComment" action="{% url 'add_comment'
+          issue.pk %}">
+          {% csrf_token %} {{ comment_form.as_p }}
+          <button class="btn btn-md enable" id="submitButton" type="submit">
+            Post Comment
+          </button>
+        </form>
+        <br /><br />
+        <h5>Comments...</h5>
+        <br>
+        <div>
+          {% if not issue.comments.all %} No Comments Yet...
+          {% else %}
+          <div>
+            {% for comment in issue.comments.all %}
+            <div>
+              <strong> {{comment.name}}</strong>
+              <strong> {{ comment.created_at }} </strong>
+              <br />
+              <!-- {{comment.created_at|date:"F j, Y"}} -->
+              {{ comment.content }}
+            </div>
+            <br>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="spaceComment">
+        <div>
+          <h5>Activities</h5>
+          <br>
+          <div>
+            {% if not issue.activities.all %} No Activities Yet...
+            {% else %}
+            <div>
+              {% for activity in issue.activities.all %}
+              <div>
+                <strong> {{activity.user}}</strong>
+                <strong> {{ activity.created_at }} </strong>
+                <br />
+                <!-- {{comment.created_at|date:"F j, Y"}} -->
+                {% if activity.formerSubject %}
+                Changed subject from "{{ activity.formerSubject }}" to "{{
+                activity.latterSubject }}".<br>
+                {% endif %}
+                {% if activity.formerContent %}
+                Changed content from "{{ activity.formerContent }}" to "{{
+                activity.latterContent }}".<br>
+                {% endif %}
+                {% if activity.formerContent %}
+                Changed type from "{{ activity.formerType }}" to "{{
+                activity.latterType }}".<br>
+                {% endif %}
+                {% if activity.formerSeverity %}
+                Changed severity from "{{ activity.formerSeverity }}" to
+                "{{
+                activity.latterSeverity }}".<br>
+                {% endif %}
+                {% if activity.formerPriority %}
+                Changed priority from "{{ activity.formerPriority }}" to
+                "{{
+                activity.latterPriority }}".<br>
+                {% endif %}
+
+                {% if activity.attachments.all %}
+                Added attachments:<br>
+                <div style="padding-left: 20px;">
+                  {% for attachment in activity.attachments.all %}
+                  {{ attachment.filename }}<br>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+              <br>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-column column">
+
+      <a href="{% url 'edit_issue' issue.id%}" class="btn btn-secondary
+        btn-sm" style="width: 60px;">Edit</a>
+      <br>
+
+      <a href="{% url 'delete_issue' issue.id%}" class="btn btn-warning
+        btn-sm"
+        style="background-color: red; margin-top: 8px; width: 60px;">Delete</a>
+      <br>
+
+      <!-- Creation info -->
+      <p style="display:inline;">Created By <a href='#'>{{issue.created_by.username}}</a>
+        {% if not request.user.profile_pic %}
+        <img class="profile-pic"
+          src="{{issue.created_by.socialaccount_set.all.0.get_avatar_url}}"
+          alt="Profile Pic">
+        {% else %}
+        <img class="profile-pic"
+          src="{{issue.created_by.profile_pic.url}}"
+          alt="Profile Pic">
+        {% endif %}
+      </p>
+      <p> At {{issue.created_at}}</p>
+
+      <br>
+
+      <!-- Updating info -->
+      {% if issue.updated_by != null %}
+      <p style="display:inline;">Updated By <a href='#'>{{issue.updated_by.username}}</a>
+        {% if not request.user.profile_pic %}
+        <img class="profile-pic"
+          src="{{issue.updated_by.socialaccount_set.all.0.get_avatar_url}}"
+          alt="Profile Pic">
+        {% else %}
+        <img class="profile-pic"
+          src="{{issue.updated_by.profile_pic.url}}"
+          alt="Profile Pic">
+        {% endif %}
+      </p>
+      <p> At {{issue.updated_at}}</p>
+      <br>
+      {% endif %}
+
+      <!-- Assigned to info -->
+      {% if issue.assigned_to != null %}
+      <p style="display:inline;">Assigned To <a href='#'>{{issue.assigned_to.username}}</a>
+        {% if not request.user.profile_pic %}
+        <img class="profile-pic"
+          src="{{issue.assigned_to.socialaccount_set.all.0.get_avatar_url}}"
+          alt="Profile Pic">
+        {% else %}
+        <img class="profile-pic"
+          src="{{issue.assigned_to.profile_pic.url}}"
+          alt="Profile Pic">
+        {% endif %}
+      </p>
+      <br>
+      {% endif %}
+
+
+      <div>
+        <!-- Type, priority, severity and deadline -->
+        <p style="display:inline;">{% include 'snippets/type.html' with type=issue.type full=True %}</p>
+        <br>
+        <p style="display:inline;">{% include 'snippets/severity.html' with severity=issue.severity full=True %}</p>
+        <br>
+        <p style="display:inline;">{% include 'snippets/priority.html' with priority=issue.priority full=True %}</p>
+        <p>{{issue.deadline}}</p>
+
+        <!-- Watching Button -->
+        {% if issue not in request.user.issues_watched.all %}
+        <p>
+          <form method="POST" action="{% url 'add_watcher' issue.id %}">
+            {% csrf_token %}
+            <button class="btn btn-md enable" id="submitButton"
+              type="submit">
+              Watch Issue
+            </button>
+            <input type="hidden" name="issue_id" value="{{ issue.id }}">
+          </form>
+        </p>
+        {% else %}
+        <p>
+          <form method="POST" action="{% url 'delete_watcher' issue.id
+            %}">
+            {% csrf_token %}
+            <button class="btn btn-md enable" id="submitButton"
+              type="submit">
+              Unwatch Issue
+            </button>
+            <input type="hidden" name="issue_id" value="{{ issue.id }}">
+          </form>
+        </p>
+        {% endif %}
+
+        <!-- Lock Button -->
+        <p><button class="btn btn-md block-btn" onclick="location.href='{%
+            url
+            'block_issue' issue.id %}'">
+            {% if issue.blocked %}
+            UnBlock Issue
+            {% else %}
+            Block Issue
+            {% endif%}
+          </button></p>
+
+        <!-- Assign Buttons -->
+        {% if issue.assigned_to == null %}
+        <p><button class="btn btn-md block-btn" onclick="location.href='{%
+            url
+            'assign_me' issue.id %}'">
+            Assigne To Me
+          </button></p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+  {% endblock content %}

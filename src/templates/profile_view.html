@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+  .nav-issue {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  a:link,
+  a:visited,
+  a:active {
+    text-decoration: none;
+    color: black;
+  }
+
+  .search-bar {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .low_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #0f0;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .normal_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #fe9e04;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .high_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #f00;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  td a {
+    display: block;
+    text-decoration: none;
+    color: black;
+  }
+
+  th a {
+    display: block;
+    text-decoration: none;
+    color: black;
+  }
+</style>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  {% if not request.user.profile_pic %}
+        <img src="{% static '/images/imagen_exemple.jpg' %}" alt="" width="128" height="128" class="rounded-circle me-2">
+      {% else %}
+        <img src="{{ request.user.profile_pic.url }}" alt="" width="128" height="128" class="rounded-circle me-2">
+      {% endif %}
+  <h1 class="display-4">{{request.user.username}}</h1>
+
+  {% if not request.user.bio %}
+        <p class="lead">Hi! I'm a developer.</p>
+      {% else %}
+        <p class="lead">{{request.user.bio}}</p>
+      {% endif %}
+  
+</div>
+
+<br>
+
+<div class="container-xxl">
+  <div class="d-flex flex-column">
+    <p class="lead"><strong>Watched issues</strong></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" style="text-align: center">
+            Id
+          </th>
+          <th scope="col">
+            Subject
+          </th>
+          <th scope="col">
+            Content
+          </th>
+          <th scope="col" style="text-align: center">
+            Type
+          </th>
+          <th scope="col" style="text-align: center">
+            Severity
+          </th>
+          <th scope="col" style="text-align: center">
+            Priority
+          </th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="issuesTable">
+
+        {% for issue in issues%}
+
+          <tr style="vertical-align: middle" class="issue-row" data-type="{{issue.type}}"
+          data-severity="{{issue.severity}}" data-priority="{{issue.priority}}">
+          <th style="text-align: center"><a href="{% url 'issue_detail' issue.id%}">#{{issue.id}}</a></th>
+          <td><a href="{% url 'issue_detail' issue.id%}">{{issue.subject}}</a></td>
+          <td><a href="{% url 'issue_detail' issue.id%}">{{issue.content|truncatechars:20}}</a></td>
+
+          <td style="text-align: center">
+            {% if issue.type == 'B' %}
+            <img src="{% static '/images/bug.png' %}" title="Bug" width="24" height="24" alt="Bug">
+            {% elif issue.type == 'Q' %}
+            <img src="{% static '/images/question.png' %}" title="Question" width="24" height="24" alt="Question">
+            {% elif issue.type == 'E' %}
+            <img src="{% static '/images/light-bulb.png' %}" title="Enhancement" width="24" height="24"
+              alt="Enhancement">
+            {% endif %}
+          </td>
+
+          <td style="text-align: center">
+            {{issue.severity}}
+          </td>
+
+          <td style="text-align: center">
+            {% if issue.priority == 'L' %}
+            <span class="low_priority" title="Low"></span>
+            {% elif issue.priority == 'N' %}
+            <span class="normal_priority" title="Normal"></span>
+            {% elif issue.priority == 'H' %}
+            <span class="high_priority" title="High"></span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'edit_issue' issue.id%}" class="btn btn-secondary btn-sm">Edit</a>
+          </td>
+          <td>
+            <a href="{% url 'delete_issue' issue.id%}" class="btn btn-warning btn-sm"
+              style="background-color: red;">Delete</a>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </thead>
+  </div>
+</div>
+
+<div class="container-xxl">
+  <div class="d-flex flex-column">
+    <p class="lead"><strong>Timeline</strong></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" style="text-align: center">
+            Issue
+          </th>
+          <th scope="col">
+            Action
+          </th>
+          <th scope="col">
+            Time
+          </th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="issuesTable">
+
+        {% for log in logs %}
+
+          <tr style="vertical-align: middle" class="issue-row" data-type="{{issue.type}}"
+          data-severity="{{issue.severity}}" data-priority="{{issue.priority}}">
+          <th style="text-align: center">{{log.issue_name}}</th>
+          <td>{{log.change_type}}</td>
+          <td>{{log.created_at}}</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </thead>
+  </div>
+</div>
+
+{% endblock content %}

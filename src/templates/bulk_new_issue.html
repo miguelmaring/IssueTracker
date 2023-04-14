@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+display: flex;
+/* width: 100%; */
+justify-content: center;
+
+{% block content %}
+
+<style type="text/css">
+    .fieldForm {
+        display: flex;
+        justify-content: center;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .btn {
+        background-color: #83EDDE;
+    }
+
+    .btn:hover {
+        background-color: #008AA8;
+    }
+</style>
+
+{% include 'snippets/title.html' with title=title_value %}
+
+<div class="container px-5 my-5">
+    <form id="contactForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label" for="subject">Subjects</label><br>
+            <textarea class="form-control" name="titles" id="titles" placeholder="Enter one subject per line" rows="5"></textarea>
+        </div>
+        <div class="d-grid">
+            <button class="btn  btn-lg enable" id="submitButton" style="color:black" type="submit" name="submit">Submit</button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+{% endblock content %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+display: flex;
+/* width: 100%; */
+justify-content: center;
+
+{% block content %}
+
+<style type="text/css">
+    .fieldForm {
+        display: flex;
+        justify-content: center;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .btn {
+        background-color: #83EDDE;
+    }
+
+    .btn:hover {
+        background-color: #008AA8;
+    }
+</style>
+
+{% include 'snippets/title.html' with title=title_value %}
+
+<div class="container px-5 my-5">
+    <form id="contactForm" method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{profile_form.as_p}}
+        <div class="d-grid">
+            <button class="btn  btn-lg enable" id="submitButton" style="color:black" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+{% endblock content %}

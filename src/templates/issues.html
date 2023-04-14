@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+  .nav-issue {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  a:link,
+  a:visited,
+  a:active {
+    text-decoration: none;
+    color: black;
+  }
+
+  .search-bar {
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .whishlist {
+    height: 16px;
+    width: 16px;
+    background-color: #70728f;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .minor {
+    height: 16px;
+    width: 16px;
+    background-color: #40a8e4;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .normal {
+    height: 16px;
+    width: 16px;
+    background-color: #40e47c;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .important {
+    height: 16px;
+    width: 16px;
+    background-color: #e4a240;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .critical {
+    height: 16px;
+    width: 16px;
+    background-color: #e44057;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .low_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #0f0;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .normal_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #fe9e04;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .high_priority {
+    height: 16px;
+    width: 16px;
+    background-color: #f00;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  td a {
+    display: block;
+    text-decoration: none;
+    color: black;
+  }
+
+  th a {
+    display: block;
+    text-decoration: none;
+    color: black;
+  }
+
+  .btn:hover {
+    color: white;
+  }
+
+  .btn {
+    color: black;
+  }
+</style>
+
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Issue Tracker</h1>
+  <p class="lead">This is the page for Issue Tracker from work of ASW.</p>
+</div>
+
+{% include 'snippets/_messages.html' %}
+
+
+<div>
+  <div class="nav-issue">
+    <div class="search-bar mt-sm-2 mr-2">
+      <form method="POST" action="{% url 'search_issue' %}">
+        {% csrf_token %}
+        <input type="text" class="form-control" name="searched" id="searchField" placeholder="Search Issue">
+      </form>
+    </div>
+    <div>
+      <a href="{% url 'new_issue' %}"><button type="button" class="btn btn-secondary">NEW ISSUE</button></a>
+      <a href="{% url 'bulk_new_issue' %}"><button type="button" class="btn " style="color: black;">BULK INSERT</button></a>
+    </div>
+  </div>
+
+  <br>
+
+  <form class="form-container" method="get" action="{% url 'issues_filters' %}">
+    <label>Type:</label>
+    <select name="type">
+      <option value="">All</option>
+      <option value="B">Bug</option>
+      <option value="Q">Question</option>
+      <option value="E">Enhancement</option>
+    </select>
+
+    <label style="margin-left:10px">Severity:</label>
+    <select name="severity">
+      <option value="">All</option>
+      <option value="W">Whishlist</option>
+      <option value="M">Minor</option>
+      <option value="N">Normal</option>
+      <option value="I">Important</option>
+      <option value="C">Critical</option>
+    </select>
+
+    <label style="margin-left:10px">Priority:</label>
+    <select name="priority">
+      <option value="">All</option>
+      <option value="L">Low</option>
+      <option value="N">Normal</option>
+      <option value="H">High</option>
+    </select>
+
+    <input type="submit" value="Filters" style="margin-left: 10px;" class="btn btn-secondary btn-sm">
+  </form>
+</div>
+
+<br>
+
+<div class="container-xxl">
+  <div class="d-flex flex-column">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" style="text-align: center">
+            Id
+            <a href="{% url 'issues_list' 'id' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'id' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col">
+            Subject
+            <a href="{% url 'issues_list' 'subject' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'subject' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col">
+            Content
+            <a href="{% url 'issues_list' 'content' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'content' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col" style="text-align: center">
+            Type
+            <a href="{% url 'issues_list' 'type' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'type' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col" style="text-align: center">
+            Severity
+            <a href="{% url 'issues_list' 'severity' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'severity' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col" style="text-align: center">
+            Priority
+            <a href="{% url 'issues_list' 'priority' 'asc' %}" title="asc">↑</a>
+            <a href="{% url 'issues_list' 'priority' 'desc' %}" title="desc">↓</a>
+          </th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="issuesTable">
+        {% for issue in issues%}
+        <tr style="vertical-align: middle" class="issue-row" data-type="{{issue.type}}"
+          data-severity="{{issue.severity}}" data-priority="{{issue.priority}}">
+          <th style="text-align: center"><a href="{% url 'issue_detail' issue.id%}">#{{issue.id}}</a></th>
+          <td><a href="{% url 'issue_detail' issue.id%}">{{issue.subject}}</a></td>
+          <td><a href="{% url 'issue_detail' issue.id%}">{{issue.content|truncatechars:20}}</a></td>
+
+          <td style="text-align: center">
+            {% include 'snippets/type.html' with type=issue.type full=False %}
+          </td>
+
+          <td style="text-align: center">
+            {% include 'snippets/severity.html' with severity=issue.severity full=False %}
+          </td>
+
+          <td style="text-align: center">
+            {% include 'snippets/priority.html' with priority=issue.priority full=False %}
+          </td>
+          <td>
+            <a href="{% url 'edit_issue' issue.id%}" class="btn btn-secondary btn-sm">Edit</a>
+          </td>
+          <td>
+            <a href="{% url 'delete_issue' issue.id%}" class="btn btn-warning btn-sm"
+              style="background-color: red;">Delete</a>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </thead>
+  </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<style type="text/css">
+    .nav-issue{
+        align-items: center;
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+    a:link, a:visited, a:active {
+            text-decoration:none;
+            color: black;
+        }
+    .search-bar{
+      max-width: 500px;
+      width: 100%;
+    }
+    .btn{
+        color: black;
+    }
+</style>
+
+{% if searched %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Your Searched For {{searched}} </h1>
+  </div>
+  
+  {% else %}
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Hey! Your Forgot To Search For A Issue...</h1>
+  </div>
+{% endif %}
+    
+
+
+    <div class="nav-issue">
+        <div class="search-bar mt-sm-2 mr-2">
+            <form method="POST" action="{% url 'search_issue' %}">
+                {% csrf_token %}
+                <input type="text" class="form-control" name="searched" id="searchField" placeholder="Search Issue">
+              </form>
+
+        </div>
+        <div><a href="{% url 'new_issue' %}"><button type="button" class="btn ">NEW ISSUE</button></a></div>
+    </div>
+
+
+    <br>
+
+    <div class="container-xxl">
+        <div class="d-flex flex-column">
+
+          <table class="table">
+            {% if issues %}
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Content</th>
+                <th scope="col">Type</th>
+                <th scope="col">Severity</th>
+                <th scope="col">Priority</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>     
+            
+            
+                
+ 
+                  
+            <tbody>
+              {% for issue in issues%}
+              <tr>
+                <th><a href="{% url 'issue_detail' issue.id%}">#{{issue.id}}</a></th>
+                <td><a href="{% url 'issue_detail' issue.id%}">{{issue.subject}}</a></td>
+                <td><a href="{% url 'issue_detail' issue.id%}">{{issue.content|truncatechars:20}}</a></td>
+                <td>{{issue.type}}</td>
+                <td>{{issue.severity}}</td>
+                <td>{{issue.priority}}</td>
+                <td>
+                  <a 
+                    href="{% url 'edit_issue' issue.id%}"
+                    class="btn btn-secondary btn-sm"
+                    >Edit</a>
+                </td>
+                <td>
+                  <a 
+                    href="{% url 'delete_issue' issue.id%}"
+                    class="btn btn-warning btn-sm"
+                    style="background-color: red;"
+                    >Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% else %}
+            <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+                <h5 class="display-6">
+                    Sorry, there seems to be no Issue match with "{{searched}}" you can try with another word </h5>
+              </div>
+            <br>
+
+            {% endif %}
+          </table>
+          </thead>
+        </div>
+      </div>
+
+
+{% endblock content %}

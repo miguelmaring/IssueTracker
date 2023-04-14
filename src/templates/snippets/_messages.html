@@ -1,0 +1,35 @@
+<style type="text/css">
+  
+  .messages {
+    animation-name: fade-out;
+    animation-delay: 5s; /* Duración del tiempo antes de que comience la animación */
+    animation-duration: 2s; /* Duración de la animación */
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        padding: 0;
+        margin: 0;
+    }
+}
+  
+  </style>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-sm alert-{{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</ul>
+{% endif %}

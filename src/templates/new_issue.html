@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+display: flex;
+/* width: 100%; */
+justify-content: center;
+
+{% block content %}
+
+<style type="text/css">
+    .fieldForm {
+        display: flex;
+        justify-content: center;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    .btn {
+        background-color: #83EDDE;
+        color: black;
+    }
+
+    .btn:hover {
+        background-color: #008AA8;
+        color: white;
+    }
+</style>
+
+{% include 'snippets/title.html' with title=title_value %}
+
+<div class="container px-5 my-5">
+    <form id="contactForm" method="post">{% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label" for="subject">Subject</label><br>
+            {{issues_form.subject}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="content">Content</label><br>
+            {{issues_form.content}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="type">Type</label><br>
+            {{issues_form.type}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="severity">severity</label><br>
+            {{issues_form.severity}}
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="priority">Priority</label><br>
+            {{issues_form.priority}}
+        </div>
+        <div class="mb-3">
+            <label for="deadline">Select a Deadline</label><br>
+            {{issues_form.deadline}}
+
+        </div>
+        <div class="d-grid">
+            <button class="btn  btn-lg enable" id="submitButton" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+{% endblock content %}

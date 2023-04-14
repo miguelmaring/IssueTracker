@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Issue Tracker</title>
+  {% include 'snippets/header.html' %}
+
+
+</head>
+
+<body>
+  <style type="text/css">
+    .main {
+      min-height: 100vh;
+      height: 100%;
+      margin-left: 180px;
+    }
+  </style>
+
+  <div style="display: flex;">
+    <div style="position: sticky;">
+      {% include 'snippets/_sidebar.html' %}
+    </div>
+    <div class="main" style="width: 100%;">
+      {% block content %}
+
+      {% endblock content %}
+    </div>
+  </div>
+
+
+
+  {% include 'snippets/footer.html' %}
+
+
+</body>
+
+</html>

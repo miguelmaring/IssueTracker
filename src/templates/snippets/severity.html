@@ -1,0 +1,38 @@
+{% load static %}
+
+{% if severity == 'W' %}
+
+{% if full == True %}
+Severity: Whishlist
+{% endif %}
+<span class="whishlist" title="Whishlist"></span>
+
+{% elif severity == 'M' %}
+
+{% if full == True %}
+Severity: Minor
+{% endif %}
+<span class="minor" title="Minor"></span>
+
+{% elif severity == 'N' %}
+
+{% if full == True %}
+Severity: Normal
+{% endif %}
+<span class="normal" title="Normal"></span>
+
+{% elif severity == 'I' %}
+
+{% if full == True %}
+Severity: Important
+{% endif %}
+<span class="important" title="Important"></span>
+
+{% elif severity == 'C' %}
+
+{% if full == True %}
+Severity: Critical
+{% endif %}
+<span class="critical" title="Critical"></span>
+
+{% endif %}
