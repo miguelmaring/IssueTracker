@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     'issues',
     'attachments',
     'users',
+    'issue_tracker',
+    'your_application',
 ]
 
 SITE_ID = 1
